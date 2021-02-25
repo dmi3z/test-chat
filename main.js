@@ -19,32 +19,12 @@ const server = app
 
 
 const wss = new WebSocket.Server({ server });
-let participants = [];
 
 wss.on('connection', (ws) => {
     ws.on('message', (message) => {
         const parsedMessage = JSON.parse(message);
-        if (parsedMessage && parsedMessage.id) {
-            let messageForAll = '';
-            switch(parsedMessage.id) {
-                case 'JOIN_CHAT':
-                    const messageForUser = JSON.stringify({ id: 'EXISTING_PARTICIPANTS', data: participants });
-                    messageForAll = JSON.stringify({ id: 'NEW_PARTICIPANT', data:  parsedMessage.name })
-                    participants.push(parsedMessage.name);
-                    ws.send(messageForUser);
-                    sendToAll(messageForAll);
-                    break;
-
-                case 'NEW_MESSAGE':
-                    messageForAll = JSON.stringify({ id: 'NEW_MESSAGE', data: parsedMessage.data });
-                    sendToAll(messageForAll);
-                    break;
-
-                case 'LEAVE_CHAT':
-                    sendToAll(message);
-                    participants = participants.filter(part => part !== parsedMessage.name);
-                    break;
-            }
+        if (parsedMessage) {
+            sendToAll(parsedMessage);
         }
     });
 });
