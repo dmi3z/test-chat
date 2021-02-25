@@ -23,9 +23,10 @@ const wss = new WebSocket.Server({ server });
 wss.on('connection', (ws) => {
     ws.on('message', (message) => {
         const parsedMessage = JSON.parse(message);
-        if (parsedMessage) {
-            sendToAll(parsedMessage);
-        }
+        console.log(parsedMessage);
+        // if (parsedMessage) {
+        //     sendToAll(parsedMessage);
+        // }
     });
 });
 
